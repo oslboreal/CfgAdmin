@@ -10,7 +10,7 @@ namespace cfg{
 	public:
 		CfgAdmin(char* path);
 		~CfgAdmin();
-	
+
 	public: // Propiedades publicas.
 
 	private: // Propiedades privadas.
@@ -20,12 +20,20 @@ namespace cfg{
 	public: // Metodos publicos
 		char* getPath(void);
 		bool setPath(char* path);
+		bool setConfigState(bool state);
+
+
 		int getIntCfg(char* param);
 		char* getStrCfg(char* param);
 		float getFltCfg(char* param);
 		bool getState(void);
 
+		bool setIntCfg(char* paramToSet, const char* value);
+		bool setFltCfg(char* paramToSet, const char* value);
+		bool setStrCfg(char *paramToSet, const char* value);
+
 		char* getLineWhere(char* param);
+		long int getValuePos(char* param);
 
 		bool setIntCfg(char* param, int value);
 		bool setStrCfg(char* param, char* value);
@@ -35,6 +43,7 @@ namespace cfg{
 		char* getValue(char* param);
 		bool verifyLine(char* param, char* bufferObtainedLine);
 		char* getLineValue(char* bufferObtainedLine, int paramLen);
+		
 		
 	};
 

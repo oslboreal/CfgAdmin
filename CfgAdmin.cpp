@@ -1,6 +1,5 @@
 #include "CfgAdmin.hpp"
 
-
 	cfg::CfgAdmin::CfgAdmin(char * path)
 	{
 		if (!path)
@@ -48,9 +47,42 @@
 		return bRet;
 	}
 
+	bool cfg::CfgAdmin::setConfigState(bool state)
+	{
+		bool bReturn = false;
+		if (this->getPath() != NULL) // No podría estár OK sin PATH.
+		{
+			bReturn = state;
+		}
+		return bReturn;
+	}
+
 	int cfg::CfgAdmin::getIntCfg(char * param)
 	{
-		return 0;
+		int iReturn = 0;
+		if (this->getState())
+		{
+			if (param != NULL)
+			{
+				iReturn = atoi(getLineWhere(param));
+			}
+			
+		}
+		return iReturn;
+	}
+
+	float cfg::CfgAdmin::getFltCfg(char * param)
+	{
+		float fReturn = 0;
+		if (this->getState())
+		{
+			if (param != NULL)
+			{
+				fReturn = (float)atof(getLineWhere(param));
+			}
+
+		}
+		return fReturn;
 	}
 
 	char * cfg::CfgAdmin::getStrCfg(char * param)
@@ -97,11 +129,13 @@
 			while (!cfgFile.eof())
 			{
 				cfgFile.getline(bufferLine, 255);
+
 				if (verifyLine(param, bufferLine))
 				{
 					cReturn = getLineValue(bufferLine, paramLen); // Obtenemos el valor de la linea encontrada.
 				}
 			}
+			cfgFile.close();// Cerramos elfichero.
 		}
 		return cReturn;
 	}
@@ -149,4 +183,34 @@
 			}
 		}
 		return cReturn;
+	}
+
+	long int cfg::CfgAdmin::getValuePos(char * param)
+	{
+		int iReturn = 0;
+		if (param != NULL)
+		{
+			std::fstream cfgFile(this->path, std::fstream::in); // Abrimos el fichero como lectura.
+			if (cfgFile.is_open())
+			{
+				this->setConfigState(true);
+				int pos;
+				char bufferLine[255];
+				int paramLen = strlen(param);
+				
+				while (!cfgFile.eof())
+				{
+					pos = cfgFile.tellg();// Obtenemos la posicion de la linea.
+					cfgFile.getline(bufferLine, 255);
+
+					if (verifyLine(param, bufferLine))
+					{
+						iReturn = pos+paramLen+1;
+					}
+				}
+				cfgFile.close();// Cerramos elfichero.
+
+			}
+		}
+		return iReturn;
 	}
