@@ -20,3 +20,9 @@ Uploaded a new version with some fixes for CodeBlock.
 --validateIsFloat() - In progress. (Check if all of the parameter characters are number or floating point).
 
 --validateParameter() - In progress. (Check if the parameter follows the standard).
+
+--createEmptyFile() - This method will create a new .cfg file.
+
+Misc behavior and library settings.
+
+--Edit the source to fix the type of the variables passed for the parameter of the parse methods.
