@@ -26,3 +26,5 @@ Uploaded a new version with some fixes for CodeBlock.
 Misc behavior and library settings.
 
 --Edit the source to fix the type of the variables passed for the parameter of the parse methods.
+
+--Commit the source code.
