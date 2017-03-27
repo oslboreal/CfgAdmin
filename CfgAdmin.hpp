@@ -4,7 +4,7 @@
 #include <string.h>
 #include <iostream>
 
-namespace cfg{
+namespace Cfg{
 	class CfgAdmin
 	{
 	public:
