@@ -1,6 +1,6 @@
 #include "CfgAdmin.hpp"
 
-	cfg::CfgAdmin::CfgAdmin(char * path)
+	Cfg::CfgAdmin::CfgAdmin(char * path)
 	{
 		if (!path)
 		{
@@ -50,7 +50,7 @@
 	bool cfg::CfgAdmin::setConfigState(bool state)
 	{
 		bool bReturn = false;
-		if (this->getPath() != NULL) // No podrÌa est·r OK sin PATH.
+		if (this->getPath() != NULL) // No podr√≠a est√°r OK sin PATH.
 		{
 			bReturn = state;
 		}
@@ -107,11 +107,11 @@
 		{
 			char paramToSearch[255];
 			strncpy_s(paramToSearch, param, 255); // Copiamos el contenido.
-			strncat_s(paramToSearch, "=", 255); // Agregamos el igual al final del par·metro.
+			strncat_s(paramToSearch, "=", 255); // Agregamos el igual al final del par√°metro.
 			
-			if (this->getState()) // Si se construyÛ correctamente, es decir se corroboro que file exist.
+			if (this->getState()) // Si se construy√≥ correctamente, es decir se corroboro que file exist.
 			{
-				cReturn = getValue(paramToSearch); // Obtenemos e valor del par·metro.
+				cReturn = getValue(paramToSearch); // Obtenemos e valor del par√°metro.
 			}
 		}
 
