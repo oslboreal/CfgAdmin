@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <iostream>
 
-namespace cfg{
+namespace Cfg{
 	class CfgAdmin
 	{
 	public:
-		CfgAdmin(char* path);
+		CfgAdmin(const char* path);
 		~CfgAdmin();
 
 	public: // Propiedades publicas.
@@ -20,13 +20,13 @@ namespace cfg{
 
 	public: // Metodos publicos
 		char* getPath(void);
-		bool setPath(char* path);
+		bool setPath(const char* path);
 		bool setConfigState(bool state);
 
 
-		int getIntCfg(char* param);
-		char* getStrCfg(char* param);
-		float getFltCfg(char* param);
+		int getIntCfg(const char* param);
+		char* getStrCfg(const char* param);
+		float getFltCfg(const char* param);
 		bool getState(void);
 
 		bool setIntCfg(char* paramToSet, const char* value);

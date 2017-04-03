@@ -1,6 +1,6 @@
 #include "CfgAdmin.hpp"
 
-	cfg::CfgAdmin::CfgAdmin(char * path)
+	Cfg::CfgAdmin::CfgAdmin(const char* path)
 	{
 		if (!path)
 		{
@@ -10,28 +10,28 @@
 			{
 				strncpy(this->path, path, 254); // Si Path no es nulo almacenamos el mismo.
 				this->configState = false; // Por defecto el estado inicia en Cero.
-				std::fstream cfgFile;
-				cfgFile.open(path, std::fstream::in | std::fstream::out);
+				std::fstream CfgFile;
+				CfgFile.open(path, std::fstream::in | std::fstream::out);
 
-				if (cfgFile.is_open())
+				if (CfgFile.is_open())
 				{
-					this->configState = true; // Si logramos abrir el archivo de CFG entonces el estado es abierto.
+					this->configState = true; // Si logramos abrir el archivo de Cfg entonces el estado es abierto.
 				}
 
-				if(this->configState) cfgFile.close();
+				if(this->configState) CfgFile.close();
 			}
 	}
 
-	cfg::CfgAdmin::~CfgAdmin()
+	Cfg::CfgAdmin::~CfgAdmin()
 	{
 	}
 
-	char * cfg::CfgAdmin::getPath(void)
+	char * Cfg::CfgAdmin::getPath(void)
 	{
 		return this->path;
 	}
 
-	bool cfg::CfgAdmin::setPath(char * path)
+	bool Cfg::CfgAdmin::setPath(const char* path)
 	{
 		bool bRet = false;
 		if (getState() && path != NULL)
@@ -47,7 +47,7 @@
 		return bRet;
 	}
 
-	bool cfg::CfgAdmin::setConfigState(bool state)
+	bool Cfg::CfgAdmin::setConfigState(bool state)
 	{
 		bool bReturn = false;
 		if (this->getPath() != NULL) // No podría estár OK sin PATH.
@@ -57,50 +57,50 @@
 		return bReturn;
 	}
 
-	int cfg::CfgAdmin::getIntCfg(char * param)
+	int Cfg::CfgAdmin::getIntCfg(const char * param)
 	{
 		int iReturn = 0;
 		if (this->getState())
 		{
 			if (param != NULL)
 			{
-				iReturn = atoi(getLineWhere(param));
+				iReturn = atoi(getLineWhere((char*)param));
 			}
 
 		}
 		return iReturn;
 	}
 
-	float cfg::CfgAdmin::getFltCfg(char * param)
+	float Cfg::CfgAdmin::getFltCfg(const char * param)
 	{
 		float fReturn = 0;
 		if (this->getState())
 		{
 			if (param != NULL)
 			{
-				fReturn = (float)atof(getLineWhere(param));
+				fReturn = (float)atof(getLineWhere((char*)param));
 			}
 
 		}
 		return fReturn;
 	}
 
-	char * cfg::CfgAdmin::getStrCfg(char * param)
+	char * Cfg::CfgAdmin::getStrCfg(const char * param)
 	{
 		char* bReturn = NULL;
 		if (param != NULL)
 		{
-			bReturn = getLineWhere(param);
+			bReturn = getLineWhere((char*)param);
 		}
 		return bReturn;
 	}
 
-	bool cfg::CfgAdmin::getState(void)
+	bool Cfg::CfgAdmin::getState(void)
 	{
 		return this->configState;
 	}
 
-	char * cfg::CfgAdmin::getLineWhere(char * param)
+	char * Cfg::CfgAdmin::getLineWhere(char * param)
 	{
 		char* cReturn = NULL;
 		if (param != NULL)
@@ -118,29 +118,29 @@
 		return cReturn;
 	}
 
-	char * cfg::CfgAdmin::getValue(char * param)
+	char * Cfg::CfgAdmin::getValue(char * param)
 	{
 		char* cReturn = NULL;
-		std::fstream cfgFile(this->getPath(), std::fstream::in);
-		if (cfgFile.is_open())
+		std::fstream CfgFile(this->getPath(), std::fstream::in);
+		if (CfgFile.is_open())
 		{
 			char bufferLine[255];
 			int paramLen = strlen(param);
-			while (!cfgFile.eof())
+			while (!CfgFile.eof())
 			{
-				cfgFile.getline(bufferLine, 255);
+				CfgFile.getline(bufferLine, 255);
 
 				if (verifyLine(param, bufferLine))
 				{
 					cReturn = getLineValue(bufferLine, paramLen); // Obtenemos el valor de la linea encontrada.
 				}
 			}
-			cfgFile.close();// Cerramos elfichero.
+			CfgFile.close();// Cerramos elfichero.
 		}
 		return cReturn;
 	}
 
-	bool cfg::CfgAdmin::verifyLine(char * param, char * bufferObtainedLine)
+	bool Cfg::CfgAdmin::verifyLine(char * param, char * bufferObtainedLine)
 	{
 		int i, paramLen, cont=0;
 		paramLen = strlen(param);
@@ -162,7 +162,7 @@
 		return bReturn;
 	}
 
-	char * cfg::CfgAdmin::getLineValue(char * bufferObtainedLine, int paramLen)
+	char * Cfg::CfgAdmin::getLineValue(char * bufferObtainedLine, int paramLen)
 	{
 		char* cReturn = NULL;
 		if (bufferObtainedLine != NULL)
@@ -184,30 +184,30 @@
 		return cReturn;
 	}
 
-	long int cfg::CfgAdmin::getValuePos(char * param)
+	long int Cfg::CfgAdmin::getValuePos(char * param)
 	{
 		int iReturn = 0;
 		if (param != NULL)
 		{
-			std::fstream cfgFile(this->path, std::fstream::in); // Abrimos el fichero como lectura.
-			if (cfgFile.is_open())
+			std::fstream CfgFile(this->path, std::fstream::in); // Abrimos el fichero como lectura.
+			if (CfgFile.is_open())
 			{
 				this->setConfigState(true);
 				int pos;
 				char bufferLine[255];
 				int paramLen = strlen(param);
 
-				while (!cfgFile.eof())
+				while (!CfgFile.eof())
 				{
-					pos = cfgFile.tellg();// Obtenemos la posicion de la linea.
-					cfgFile.getline(bufferLine, 255);
+					pos = CfgFile.tellg();// Obtenemos la posicion de la linea.
+					CfgFile.getline(bufferLine, 255);
 
 					if (verifyLine(param, bufferLine))
 					{
 						iReturn = pos+paramLen+1;
 					}
 				}
-				cfgFile.close();// Cerramos elfichero.
+				CfgFile.close();// Cerramos elfichero.
 
 			}
 		}
