@@ -25,6 +25,10 @@ Uploaded a new version with some fixes for CodeBlock.
 
 Misc behavior and library settings.
 
---Edit the source to fix the type of the variables passed for the parameter of the parse methods.
+--Edit the source to fix the type of the variables passed for the parameter of the parse methods. - OK
 
---Commit the source code.
+--Commit the source code. - OK
+
+// bool getValue(string value, out type salida); // Sobrecargar con todos los tipos de datos primitivos.
+
+
