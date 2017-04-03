@@ -57,40 +57,12 @@
 		return bReturn;
 	}
 
-	int Cfg::CfgAdmin::getIntCfg(const char * param)
-	{
-		int iReturn = 0;
-		if (this->getState())
-		{
-			if (param != NULL)
-			{
-				iReturn = atoi(getLineWhere((char*)param));
-			}
-
-		}
-		return iReturn;
-	}
-
-	float Cfg::CfgAdmin::getFltCfg(const char * param)
-	{
-		float fReturn = 0;
-		if (this->getState())
-		{
-			if (param != NULL)
-			{
-				fReturn = (float)atof(getLineWhere((char*)param));
-			}
-
-		}
-		return fReturn;
-	}
-
-	char * Cfg::CfgAdmin::getStrCfg(const char * param)
+	char * Cfg::CfgAdmin::getValue(const char * param)
 	{
 		char* bReturn = NULL;
 		if (param != NULL)
 		{
-			bReturn = getLineWhere((char*)param);
+			bReturn = getLineWhere((char*)param); // En caso de que el parámetro sea válido obtenemos la linea.
 		}
 		return bReturn;
 	}
@@ -105,7 +77,7 @@
 		char* cReturn = NULL;
 		if (param != NULL)
 		{
-			char paramToSearch[255];
+			char paramToSearch[255]; // Creamos un buffer.
 			strncpy(paramToSearch, param, 255); // Copiamos el contenido.
 			strncat(paramToSearch, "=", 255); // Agregamos el igual al final del parámetro.
 
@@ -121,16 +93,15 @@
 	char * Cfg::CfgAdmin::getValue(char * param)
 	{
 		char* cReturn = NULL;
-		std::fstream CfgFile(this->getPath(), std::fstream::in);
+		std::fstream CfgFile(this->getPath(), std::fstream::in); // Abrimos el archivo como lectura.
 		if (CfgFile.is_open())
 		{
 			char bufferLine[255];
 			int paramLen = strlen(param);
 			while (!CfgFile.eof())
 			{
-				CfgFile.getline(bufferLine, 255);
-
-				if (verifyLine(param, bufferLine))
+				CfgFile.getline(bufferLine, 255); // Obtenemos la linea.
+				if (verifyLine(param, bufferLine)) // Si es la linea.
 				{
 					cReturn = getLineValue(bufferLine, paramLen); // Obtenemos el valor de la linea encontrada.
 				}
@@ -167,13 +138,12 @@
 		char* cReturn = NULL;
 		if (bufferObtainedLine != NULL)
 		{
-			cReturn = new char[255];
+			cReturn = new char[255]; // Generamos espacio en memoria para retornar el valor.
 			int i = paramLen;
 			bool parar = false;
 			while (!parar)
 			{
 				cReturn[i-paramLen] = bufferObtainedLine[i];
-
 				if (bufferObtainedLine[i] == 0)
 				{
 					parar = true;
@@ -196,12 +166,10 @@
 				int pos;
 				char bufferLine[255];
 				int paramLen = strlen(param);
-
 				while (!CfgFile.eof())
 				{
 					pos = CfgFile.tellg();// Obtenemos la posicion de la linea.
 					CfgFile.getline(bufferLine, 255);
-
 					if (verifyLine(param, bufferLine))
 					{
 						iReturn = pos+paramLen+1;
