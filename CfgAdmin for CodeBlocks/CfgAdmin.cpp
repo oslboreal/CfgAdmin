@@ -30,6 +30,7 @@
 		}
 			else
 			{
+			    this->encryptionMode = encryption;
 				strncpy(this->path, path, 254); // Si Path no es nulo almacenamos el mismo.
 				this->configState = false; // Por defecto el estado inicia en Cero.
 				std::fstream CfgFile;
@@ -82,9 +83,17 @@
 	char * Cfg::CfgAdmin::getValue(const char * param)
 	{
 		char* bReturn = NULL;
-		if (param != NULL)
+		if (param != NULL) // If the param pointer is different to NULL.
 		{
-			bReturn = getLineWhere((char*)param); // En caso de que el parámetro sea válido obtenemos la linea.
+            if(this->getEncryptionMode())
+            {
+                param = sCrypt::encrypt(param); // Decrypt of the param to search.
+            }
+                bReturn = getLineWhere((char*)param);
+                if(this->getEncryptionMode())
+                {
+                    bReturn = sCrypt::decrypt(bReturn);
+                }
 		}
 		return bReturn;
 	}
@@ -101,7 +110,14 @@
 		{
 			char paramToSearch[255]; // Creamos un buffer.
 			strncpy(paramToSearch, param, 255); // Copiamos el contenido.
-			strncat(paramToSearch, "=", 255); // Agregamos el igual al final del parámetro.
+			if(this->encryptionMode != true)
+            {
+                strncat(paramToSearch, "=", 255); // Agregamos el igual al final del parámetro.
+            } else
+                {
+                    char *temp = sCrypt::encrypt("=");
+                    strncat(paramToSearch, temp, 255); // Agregamos el igual al final del parámetro.
+                }
 
 			if (this->getState()) // Si se construyó correctamente, es decir se corroboro que file exist.
 			{
@@ -216,17 +232,16 @@
         {
             std::fstream CfgFileToEncrypt(path, std::fstream::in); // Abrimos el archivo como lectura.
             std::fstream CfgFileToSave(outFileName, std::fstream::out); // Abrimos el archivo como escrituera.
+            char* encryptOut = NULL;
             if (CfgFileToEncrypt.is_open())
             {
-                char* encryptOut = NULL;
                 while (!CfgFileToEncrypt.eof())
                 {
-                    char bufferLine[1024];
-                    CfgFileToEncrypt.getline(bufferLine, 1024); // Obtenemos la linea.
-                    cout << "Linea obtenida al momento de encriptar: " << bufferLine << endl;
+                    char *bufferLine = new char[1048];
+                    CfgFileToEncrypt.getline(bufferLine, 1048); // Obtenemos la linea.
                     encryptOut = sCrypt::encrypt(bufferLine);
-                    cout << "Misma linea encriptada: " << encryptOut << endl;
                     CfgFileToSave << encryptOut << '\n';
+
                 }
             }
             CfgFileToEncrypt.close();
@@ -237,7 +252,6 @@
 
     bool Cfg::CfgAdmin::decrypt(const char * path, const char* outFileName)
     {
-
         if(path != NULL)
         {
             std::fstream CfgFileToDecyrpt(path, std::fstream::in); // Abrimos el archivo como lectura.
@@ -247,14 +261,10 @@
                 char* encryptOut = NULL;
                 while (!CfgFileToDecyrpt.eof())
                 {
-                    char bufferLine[2048];
+                    char *bufferLine = new char[2048];
                     CfgFileToDecyrpt.getline(bufferLine, 2048); // Obtenemos la linea.
-
-                   cout << "Linea obtenida al momento de encriptar: " << bufferLine << endl;
                     encryptOut = sCrypt::decrypt(bufferLine);
-                    cout << "Misma linea encriptada: " << encryptOut << endl;
                     CfgFileToSave << encryptOut << '\n';
-
                 }
             }
             CfgFileToDecyrpt.close();
